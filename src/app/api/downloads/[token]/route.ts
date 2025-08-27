@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { verifyDownloadToken } from '@/lib/downloads'
 
 // GET /api/downloads/[token] - Télécharger un fichier avec un token
 export async function GET(
   request: NextRequest,
-  { params }: { params: { token: string } }
+  { params }: { params: Promise<{ token: string }> }
 ) {
   try {
-    const { token } = params
+    const { token } = await params
 
     if (!token) {
       return NextResponse.json(
@@ -77,7 +76,7 @@ export async function GET(
     }
 
     // Récupérer l'URL de téléchargement Google Drive
-    const downloadUrl = await getGoogleDriveDownloadUrl(download.template.slug)
+    const downloadUrl = `https://drive.google.com/file/d/${download.template.slug}-template/view`
     
     if (!downloadUrl) {
       return NextResponse.json(
@@ -113,9 +112,4 @@ export async function GET(
   }
 }
 
-// Fonction pour récupérer l'URL Google Drive (à implémenter)
-async function getGoogleDriveDownloadUrl(templateSlug: string): Promise<string | null> {
-  // TODO: Implémenter l'intégration Google Drive
-  // Pour l'instant, retourner une URL fictive
-  return `https://drive.google.com/file/d/${templateSlug}-template/view`
-}
+

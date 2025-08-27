@@ -32,11 +32,12 @@ export async function generateMetadata({
 export default async function TemplatePage({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }) {
+  const resolvedParams = await params
   const [template, relatedTemplates] = await Promise.all([
-    getTemplateBySlug(params.slug),
-    getRelatedTemplates(params.slug),
+    getTemplateBySlug(resolvedParams.slug),
+    getRelatedTemplates(resolvedParams.slug),
   ])
 
   if (!template) {
