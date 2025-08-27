@@ -267,3 +267,94 @@ Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 ---
 
 **TemplateStore** - Créez des sites web exceptionnels en quelques clics 🚀
+
+## 🔧 **Problèmes identifiés et solutions :**
+
+### 1. **Turbopack incompatible avec Netlify**
+Le flag `--turbopack` dans le script de build peut causer des problèmes. Modifions le `package.json` :
+
+```json:template-store/package.json
+{
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  }
+}
+```
+
+### 2. **Créer un fichier `netlify.toml`**
+Créez ce fichier à la racine de votre projet :
+
+```toml:template-store/netlify.toml
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_VERSION = "9"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+```
+
+### 3. **Installer le plugin Netlify Next.js**
+```bash
+<code_block_to_apply_changes_from>
+```
+
+### 4. **Créer un fichier `.nvmrc` pour la version Node.js**
+```bash
+echo "18" > .nvmrc
+```
+
+### 5. **Vérifier les variables d'environnement sur Netlify**
+Sur Netlify, ajoutez ces variables d'environnement :
+
+```env
+NEXTAUTH_SECRET=votre-secret-ici
+NEXTAUTH_URL=https://votre-site.netlify.app
+DATABASE_URL=votre-url-postgresql
+STRIPE_SECRET_KEY=votre-cle-stripe
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=votre-cle-publique-stripe
+```
+
+## 🚀 **Étapes pour corriger le déploiement :**
+
+### **Étape 1 : Corriger package.json**
+```bash
+# Supprimer --turbopack des scripts
+sed -i '' 's/--turbopack//g' package.json
+```
+
+### **Étape 2 : Installer le plugin Netlify**
+```bash
+npm install -D @netlify/plugin-nextjs
+```
+
+### **Étape 3 : Tester le build localement**
+```bash
+npm run build
+```
+
+### **Étape 4 : Pousser les corrections sur GitHub**
+```bash
+git add .
+git commit -m "🔧 Fix Netlify deployment - Remove Turbopack, add Netlify config"
+git push origin main
+```
+
+## 📋 **Vérifications sur Netlify :**
+
+1. **Build logs** : Regardez les logs de build pour identifier les erreurs exactes
+2. **Node.js version** : Assurez-vous que Netlify utilise Node.js 18+
+3. **Variables d'environnement** : Vérifiez que toutes les variables sont configurées
+4. **Base de données** : Assurez-vous que votre base PostgreSQL est accessible depuis Netlify
+
+Voulez-vous que je vous aide à appliquer ces corrections étape par étape ?
