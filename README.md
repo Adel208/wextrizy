@@ -1,233 +1,269 @@
-# 🚀 EXTRiZY - Plateforme de Templates Web Premium
+# TemplateStore - Marketplace de Templates Web
 
-Une plateforme moderne et élégante pour la vente et le téléchargement de templates web professionnels, construite avec Next.js 15, Prisma, Stripe et Google Drive.
+Une marketplace moderne et professionnelle pour la vente de templates de sites web, construite avec Next.js 14, TypeScript et Tailwind CSS.
 
-## ✨ Fonctionnalités
+## 🚀 Fonctionnalités
 
-### 🎨 Design & Interface
-- **Design moderne** avec glassmorphism et animations Framer Motion
-- **Interface responsive** optimisée pour tous les appareils
-- **Thème sombre élégant** avec gradients dynamiques
-- **Animations fluides** et transitions sophistiquées
+### Pour les Utilisateurs
+- **Catalogue de Templates** : Parcourir des centaines de templates web professionnels
+- **Système de Recherche Avancé** : Filtres par catégorie, prix, technologie, note
+- **Détails Complets** : Galeries d'images, spécifications techniques, démos live
+- **Système d'Authentification** : Inscription, connexion, gestion de profil
+- **Panier d'Achat** : Gestion des commandes et processus de paiement sécurisé
+- **Tableau de Bord** : Suivi des achats, téléchargements, favoris
+- **Système de Commentaires** : Évaluations et avis sur chaque template
 
-### 🛒 Système de Vente
-- **Intégration Stripe** pour les paiements sécurisés
-- **Panier d'achat** avec Zustand pour la gestion d'état
-- **Processus de checkout** optimisé et sécurisé
-- **Gestion des commandes** complète
-
-### 📥 Système de Téléchargement
-- **Intégration Google Drive** pour le stockage des fichiers
-- **Licences numériques** avec gestion des droits
-- **Système de téléchargement** sécurisé après achat
-- **Gestion des versions** et mises à jour
-
-### 🔐 Authentification
-- **NextAuth.js v5** pour l'authentification
-- **Sessions sécurisées** avec JWT
-- **Profils utilisateurs** personnalisables
-- **Gestion des rôles** et permissions
-
-### 🗄️ Base de Données
-- **Prisma ORM** avec PostgreSQL
-- **Schéma optimisé** pour les performances
-- **Migrations automatiques** et gestion des versions
-- **Relations complexes** entre entités
+### Pour les Administrateurs
+- **Gestion des Templates** : Ajout, modification, suppression de templates
+- **Gestion des Utilisateurs** : Administration des comptes et rôles
+- **Gestion des Commandes** : Suivi des ventes et statuts
+- **Analytics** : Statistiques de vente et performance
+- **Gestion des Catégories** : Organisation du catalogue
 
 ## 🛠️ Technologies Utilisées
 
-- **Frontend**: Next.js 15, React 18, TypeScript
-- **Styling**: Tailwind CSS, CSS Modules
-- **Animations**: Framer Motion
-- **État**: Zustand
-- **Base de données**: PostgreSQL avec Prisma
-- **Paiements**: Stripe
-- **Stockage**: Google Drive API
-- **Authentification**: NextAuth.js
-- **Déploiement**: Vercel (recommandé)
+### Frontend
+- **Next.js 14** : Framework React avec App Router
+- **TypeScript** : Typage statique pour la robustesse du code
+- **Tailwind CSS** : Framework CSS utilitaire pour un design moderne
+- **Framer Motion** : Animations fluides et transitions
+- **Lucide React** : Icônes modernes et cohérentes
 
-## 🚀 Installation
+### Backend
+- **Next.js API Routes** : API RESTful intégrée
+- **Prisma ORM** : Gestion de base de données type-safe
+- **PostgreSQL** : Base de données relationnelle robuste
+- **NextAuth.js** : Authentification et gestion des sessions
 
-### Prérequis
-- Node.js 18+ 
-- PostgreSQL
-- Compte Stripe
-- Compte Google Cloud (pour Drive API)
-
-### Étapes d'installation
-
-1. **Cloner le dépôt**
-```bash
-git clone https://github.com/Adel208/wextrizy.git
-cd wextrizy/template-store
-```
-
-2. **Installer les dépendances**
-```bash
-npm install
-```
-
-3. **Configuration de l'environnement**
-```bash
-cp .env.example .env.local
-```
-
-4. **Variables d'environnement requises**
-```env
-# Base de données
-DATABASE_URL="postgresql://user:password@localhost:5432/wextrizy"
-
-# NextAuth.js
-NEXTAUTH_SECRET="your-secret-key"
-NEXTAUTH_URL="http://localhost:3000"
-
-# Stripe
-STRIPE_SECRET_KEY="sk_test_..."
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
-
-# Google Drive
-GOOGLE_DRIVE_CLIENT_ID="your-client-id"
-GOOGLE_DRIVE_CLIENT_SECRET="your-client-secret"
-GOOGLE_DRIVE_REFRESH_TOKEN="your-refresh-token"
-```
-
-5. **Configuration de la base de données**
-```bash
-npx prisma generate
-npx prisma db push
-```
-
-6. **Lancer le serveur de développement**
-```bash
-npm run dev
-```
+### Paiements & Services
+- **Stripe** : Processus de paiement sécurisé
+- **Cloudinary** : Gestion des images et médias
+- **Email** : Notifications et communications
 
 ## 📁 Structure du Projet
 
 ```
 template-store/
 ├── src/
-│   ├── app/                    # App Router Next.js 15
-│   │   ├── api/               # Routes API
+│   ├── app/                    # App Router Next.js
+│   │   ├── api/               # API Routes
 │   │   ├── auth/              # Pages d'authentification
 │   │   ├── dashboard/         # Tableau de bord utilisateur
+│   │   ├── admin/             # Interface d'administration
 │   │   ├── templates/         # Pages des templates
-│   │   ├── checkout/          # Processus de paiement
-│   │   ├── downloads/         # Téléchargements
-│   │   └── profile/           # Profil utilisateur
-│   ├── components/            # Composants React
-│   │   ├── auth/             # Composants d'authentification
-│   │   ├── cart/             # Composants du panier
+│   │   ├── checkout/          # Processus de commande
+│   │   └── blog/              # Blog et ressources
+│   ├── components/            # Composants React réutilisables
+│   │   ├── ui/               # Composants d'interface
 │   │   ├── layout/           # Composants de mise en page
-│   │   └── templates/        # Composants des templates
+│   │   ├── forms/            # Formulaires
+│   │   ├── templates/        # Composants spécifiques aux templates
+│   │   └── common/           # Composants communs
 │   ├── lib/                  # Utilitaires et configurations
-│   │   ├── auth/            # Configuration NextAuth
-│   │   ├── stripe/          # Configuration Stripe
-│   │   ├── downloads/       # Utilitaires de téléchargement
-│   │   └── stores/          # Stores Zustand
-│   └── styles/              # Styles globaux
-├── prisma/                   # Schéma et migrations Prisma
+│   │   ├── auth/             # Configuration NextAuth
+│   │   ├── db/               # Configuration Prisma
+│   │   ├── utils/            # Fonctions utilitaires
+│   │   └── validations/      # Schémas de validation
+│   ├── types/                # Types TypeScript
+│   ├── hooks/                # Hooks React personnalisés
+│   └── contexts/             # Contextes React
+├── prisma/                   # Schéma et migrations de base de données
 ├── public/                   # Assets statiques
-└── scripts/                  # Scripts utilitaires
+└── env.example              # Variables d'environnement
 ```
 
-## 🔧 Configuration
+## 🚀 Installation et Configuration
 
-### Base de Données
-Le projet utilise Prisma avec PostgreSQL. Le schéma inclut :
-- **Users**: Utilisateurs et profils
-- **Templates**: Templates disponibles à la vente
-- **Categories**: Catégories de templates
-- **Orders**: Commandes et paiements
-- **Licenses**: Licences numériques
-- **Downloads**: Historique des téléchargements
+### Prérequis
+- Node.js 18+ 
+- PostgreSQL
+- Compte Stripe (pour les paiements)
+- Compte Cloudinary (optionnel, pour les images)
 
-### Stripe
-Configuration complète pour :
-- Création de sessions de paiement
-- Webhooks pour la confirmation
-- Gestion des commandes
-- Support des devises multiples
+### 1. Cloner le projet
+```bash
+git clone <repository-url>
+cd template-store
+```
 
-### Google Drive
-Intégration pour :
-- Stockage sécurisé des fichiers
-- Génération de liens de téléchargement
-- Gestion des permissions
-- Synchronisation automatique
+### 2. Installer les dépendances
+```bash
+npm install
+```
 
-## 🎯 Fonctionnalités Principales
+### 3. Configuration de l'environnement
+```bash
+cp env.example .env.local
+```
 
-### 🏠 Page d'Accueil
-- Hero section animée avec particules
-- Présentation des fonctionnalités
-- Statistiques du site
-- Appels à l'action
+Remplir les variables dans `.env.local` :
+```env
+# Database
+DATABASE_URL="postgresql://username:password@localhost:5432/template_store"
 
-### 📚 Catalogue de Templates
-- Grille responsive des templates
-- Filtres par catégorie et technologie
-- Recherche avancée
-- Tri par popularité, prix, date
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key-here"
 
-### 🛒 Système de Panier
-- Ajout/suppression d'articles
-- Calcul automatique des totaux
-- Persistance des données
-- Intégration avec le checkout
+# Stripe
+STRIPE_PUBLISHABLE_KEY="pk_test_your_stripe_publishable_key"
+STRIPE_SECRET_KEY="sk_test_your_stripe_secret_key"
+STRIPE_WEBHOOK_SECRET="whsec_your_webhook_secret"
+```
 
-### 💳 Processus de Paiement
-- Intégration Stripe Checkout
-- Gestion des erreurs
-- Confirmation de commande
-- Redirection vers les téléchargements
+### 4. Configuration de la base de données
+```bash
+# Générer le client Prisma
+npx prisma generate
 
-### 📥 Gestion des Téléchargements
-- Tableau de bord des licences
-- Historique des téléchargements
-- Accès aux fichiers Google Drive
-- Gestion des versions
+# Créer et appliquer les migrations
+npx prisma migrate dev
+
+# (Optionnel) Remplir avec des données de test
+npx prisma db seed
+```
+
+### 5. Lancer le serveur de développement
+```bash
+npm run dev
+```
+
+Le site sera accessible sur [http://localhost:3000](http://localhost:3000)
+
+## 🗄️ Base de Données
+
+### Modèles Principaux
+
+#### User
+- Informations de profil (nom, email, image)
+- Rôle (USER/ADMIN)
+- Relations avec les commandes, avis et favoris
+
+#### Template
+- Métadonnées (titre, description, prix)
+- Images et liens de démo
+- Technologies utilisées
+- Statistiques (téléchargements, notes)
+- Relations avec catégorie, commandes et avis
+
+#### Category
+- Nom et description de catégorie
+- Couleurs et icônes pour l'interface
+- Relations avec les templates
+
+#### Order
+- Détails de commande et paiement
+- Statut et tokens de téléchargement
+- Relations avec utilisateur et template
+
+#### Review
+- Évaluations et commentaires
+- Relations avec utilisateur et template
+
+## 🔐 Authentification
+
+Le système utilise NextAuth.js avec :
+- **Credentials Provider** : Connexion par email/mot de passe
+- **Session Management** : Gestion sécurisée des sessions
+- **Role-based Access Control** : Différenciation utilisateur/admin
+- **Protected Routes** : Protection des pages sensibles
+
+## 💳 Système de Paiement
+
+Intégration Stripe complète :
+- **Checkout Sessions** : Processus de commande sécurisé
+- **Webhooks** : Gestion des événements de paiement
+- **Download Tokens** : Accès sécurisé aux templates achetés
+- **Gestion des Erreurs** : Traitement robuste des échecs
+
+## 🎨 Design System
+
+### Palette de Couleurs
+- **Primaire** : Bleu (#2563eb)
+- **Secondaire** : Violet (#7c3aed)
+- **Accent** : Orange (#f97316)
+- **Neutre** : Gris (#6b7280)
+
+### Composants
+- **Responsive Design** : Mobile-first approach
+- **Accessibilité** : Conformité WCAG 2.1
+- **Animations** : Transitions fluides avec Framer Motion
+- **Dark Mode** : Support du thème sombre (à implémenter)
+
+## 📱 Responsive Design
+
+- **Mobile First** : Design optimisé pour mobile
+- **Breakpoints** : sm (640px), md (768px), lg (1024px), xl (1280px)
+- **Grid System** : Layouts adaptatifs avec CSS Grid et Flexbox
+- **Touch Friendly** : Interactions optimisées pour tactile
 
 ## 🚀 Déploiement
 
 ### Vercel (Recommandé)
-1. Connecter le dépôt GitHub à Vercel
-2. Configurer les variables d'environnement
-3. Déployer automatiquement
+```bash
+npm run build
+vercel --prod
+```
 
-### Autres Plateformes
-- **Netlify**: Support complet de Next.js
-- **Railway**: Déploiement avec base de données
-- **DigitalOcean**: VPS personnalisé
+### Variables d'environnement de production
+- Configurer les URLs de production
+- Utiliser des clés Stripe de production
+- Configurer la base de données de production
+
+## 🧪 Tests
+
+```bash
+# Tests unitaires
+npm run test
+
+# Tests E2E
+npm run test:e2e
+
+# Couverture de code
+npm run test:coverage
+```
+
+## 📊 Performance
+
+- **Lazy Loading** : Chargement différé des composants
+- **Image Optimization** : Optimisation automatique des images Next.js
+- **Code Splitting** : Division automatique du bundle
+- **Caching** : Stratégies de cache optimisées
+
+## 🔒 Sécurité
+
+- **CSRF Protection** : Protection contre les attaques CSRF
+- **XSS Prevention** : Sanitisation des entrées utilisateur
+- **Rate Limiting** : Limitation des requêtes API
+- **Input Validation** : Validation côté client et serveur
+- **HTTPS** : Chiffrement des communications
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! Pour contribuer :
-
 1. Fork le projet
 2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
-3. Commit les changements (`git commit -m 'Add AmazingFeature'`)
+3. Commit les changements (`git commit -m 'Add some AmazingFeature'`)
 4. Push vers la branche (`git push origin feature/AmazingFeature`)
 5. Ouvrir une Pull Request
 
-## 📄 Licence
+## 📝 Licence
 
 Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
 ## 📞 Support
 
-- **Issues GitHub**: [Créer une issue](https://github.com/Adel208/wextrizy/issues)
-- **Documentation**: Consultez le code source et les commentaires
-- **Email**: [Votre email]
+- **Documentation** : [docs.templatestore.com](https://docs.templatestore.com)
+- **Email** : support@templatestore.com
+- **Discord** : [Rejoindre notre communauté](https://discord.gg/templatestore)
 
 ## 🙏 Remerciements
 
-- **Next.js Team** pour l'excellent framework
-- **Vercel** pour l'infrastructure de déploiement
-- **Stripe** pour les solutions de paiement
-- **Google** pour l'API Drive
-- **Communauté open source** pour les packages utilisés
+- [Next.js](https://nextjs.org/) pour le framework
+- [Tailwind CSS](https://tailwindcss.com/) pour le design
+- [Prisma](https://www.prisma.io/) pour l'ORM
+- [Stripe](https://stripe.com/) pour les paiements
+- [Framer Motion](https://www.framer.com/motion/) pour les animations
 
 ---
 
-**EXTRiZY** - Créez des sites web extraordinaires ! 🚀✨
+**TemplateStore** - Créez des sites web exceptionnels en quelques clics 🚀
