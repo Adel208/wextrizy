@@ -1,0 +1,239 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  orders        Order[]
+  reviews       Review[]
+  favorites     Template[] @relation("UserFavorites")
+  licenses      License[]
+  downloadRecords Download[]
+
+  @@map("users")
+}
+
+model Template {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  shortDescription String
+  price       Decimal  @db.Decimal(10, 2)
+  salePrice   Decimal? @db.Decimal(10, 2)
+  isOnSale    Boolean  @default(false)
+  isFeatured  Boolean  @default(false)
+  isPopular   Boolean  @default(false)
+  
+  // Images
+  thumbnail   String
+  images      String[]
+  demoUrl     String?
+  downloadUrl String?
+  
+  // Technical details
+  technologies String[]
+  categoryId  String
+  fileSize    String?
+  version     String?
+  
+  // Stats
+  downloads   Int      @default(0)
+  rating      Float    @default(0)
+  reviewCount Int      @default(0)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  category   Category @relation(fields: [categoryId], references: [id])
+  orderItems OrderItem[]
+  reviews    Review[]
+  favoritedBy User[]  @relation("UserFavorites")
+  licenses   License[]
+  downloadRecords Download[]
+
+  @@map("templates")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  icon        String?
+  color       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  templates  Template[]
+
+  @@map("categories")
+}
+
+model Order {
+  id            String   @id @default(cuid())
+  userId        String
+  stripeSessionId String? @unique
+  stripePaymentIntentId String?
+  amount        Decimal  @db.Decimal(10, 2)
+  currency      String   @default("EUR")
+  status        OrderStatus @default(PENDING)
+  paymentStatus PaymentStatus @default(PENDING)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  user         User     @relation(fields: [userId], references: [id])
+  orderItems   OrderItem[]
+  licenses     License[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  templateId String
+  quantity  Int
+  unitPrice Decimal @db.Decimal(10, 2)
+  totalPrice Decimal @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+
+  // Relations
+  order     Order    @relation(fields: [orderId], references: [id])
+  template  Template @relation(fields: [templateId], references: [id])
+
+  @@map("order_items")
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  userId     String
+  templateId String
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  user      User     @relation(fields: [userId], references: [id])
+  template  Template @relation(fields: [templateId], references: [id])
+
+  @@unique([userId, templateId])
+  @@map("reviews")
+}
+
+// NOUVELLES TABLES POUR LE SYSTÈME DE LICENCES ET TÉLÉCHARGEMENTS
+
+model License {
+  id            String      @id @default(cuid())
+  userId        String
+  templateId    String
+  orderId       String
+  type          LicenseType
+  status        LicenseStatus @default(ACTIVE)
+  
+  // Limites de téléchargement
+  downloadsCount Int        @default(0)
+  maxDownloads   Int
+  downloadLimit  Int        @default(1) // Nombre de projets/sites autorisés
+  
+  // Validité
+  validFrom     DateTime    @default(now())
+  validUntil    DateTime
+  
+  // Métadonnées
+  metadata      Json?       // Stockage flexible pour infos supplémentaires
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Relations
+  user         User        @relation(fields: [userId], references: [id])
+  template     Template    @relation(fields: [templateId], references: [id])
+  order        Order       @relation(fields: [orderId], references: [id])
+  downloads    Download[]
+
+  @@unique([userId, templateId, orderId])
+  @@map("licenses")
+}
+
+model Download {
+  id            String   @id @default(cuid())
+  licenseId     String
+  userId        String
+  templateId    String
+  
+  // Sécurité
+  downloadToken String    @unique // JWT ou token unique pour le téléchargement
+  downloadUrl   String    // URL Google Drive temporaire
+  ipAddress     String?   // IP de l'utilisateur
+  userAgent     String?   // User agent du navigateur
+  
+  // Métadonnées
+  downloadedAt  DateTime  @default(now())
+  expiresAt     DateTime  // Expiration du lien de téléchargement
+  isExpired     Boolean   @default(false)
+  
+  createdAt     DateTime  @default(now())
+
+  // Relations
+  license      License    @relation(fields: [licenseId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+  template     Template   @relation(fields: [templateId], references: [id])
+
+  @@map("downloads")
+}
+
+// ENUMS EXISTANTS
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+// NOUVEAUX ENUMS
+enum LicenseType {
+  PERSONAL      // Usage personnel uniquement
+  COMMERCIAL    // Usage commercial limité
+  ENTERPRISE    // Usage commercial illimité
+}
+
+enum LicenseStatus {
+  ACTIVE        // Licence active et valide
+  EXPIRED       // Licence expirée
+  SUSPENDED     // Licence suspendue (abus détecté)
+  REVOKED       // Licence révoquée
+}
